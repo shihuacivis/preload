@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta content="yes" name="apple-mobile-web-app-capable"/>
+  <meta content="yes" name="apple-touch-fullscreen"/>
+  <meta content="telephone=no" name="format-detection"/>
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
+  <title>preoload-demo</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div class="page-load" id="js-pageLoad">
+    <p>正在为您加载资源（<span id="js-progress">0%</span>）...</p>
+  </div>
+  <script>
+    window.oPageConfig = {
+      'oData': {
+        'prefix': './images/'
+      , 'aImgItems': ['p1-sq-lb.png','p1-sq-lt.png','p1-sq-rb.png','p1-sq-rt.png','p1-sq-m.png','p1-role.png']
+      }
+    }
+  </script>
+  <script src="js/preload.js"></script>
+  <script>
+    $process = document.querySelector('#js-progress');
+    $load = document.querySelector('#js-pageLoad');
+    new preload({
+      items: window.oPageConfig.oData.aImgItems
+    , prefix: window.oPageConfig.oData.prefix || ''
+    , dev: false
+    , timeout: 2
+    , callback: function() {
+        $load.innerHTML += '<h3>加载完毕</h3>';
+        console.log('加载完毕');
+      }
+    , process: function(val) {
+        $process.innerHTML = val + '%';
+      }
+    });
+  </script>
+</body>
+</html>
