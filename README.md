@@ -1,7 +1,14 @@
 # preload
-html5图片预加载插件。
+html5预加载插件
 
-（！！！仅支持图片！！！）
+20160117加入媒体文件预加载豪华套餐
+
+可预加载文件：
+- 图片（gif|jpg|jpeg|png）
+- 声音（mp3|wav|ogg）
+- 视频（mp4）
+
+
 
 主要功能：
 
@@ -19,7 +26,7 @@ html5图片预加载插件。
 new preload({
   items: []               // 需要加载的图片列表
 , prefix: ''              // 如有需要可以更改图片路径的前缀
-, dev: false              // 开发模式默认false，置为true时直接执行callback
+, dev: false              // 开发模式 默认false，置为true时直接执行callback
 , timeout: 60             // 默认当加载超过60s时会强制执行回调
 , callback: function() {
     // 加载所有图片后执行的回调

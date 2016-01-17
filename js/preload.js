@@ -20,6 +20,7 @@
     this.timer = null;
     this.percent = 0;
     this.despercent = 0;
+    this.nCurIndex = 0;
     this.dev = option.dev || false;
     this.timeout = option.timeout || 60;
     this.startLoad();
@@ -36,19 +37,44 @@
   };
   p.prototype.load = function() {
     var sf = this;
-    var n = this.items.length;
-    var e = 0;
-    this.items.forEach(function(t) {
-      var s = new Image;
-      s.onload = s.onerror = s.onabort = function() {
-        !sf.bFinish && (sf.despercent = Math.floor((++e / n) * 100));
-      };
-      s.src = sf.prefix + t;
+    this.items.forEach(function(url) {
+      if (url == '') {
+        sf._loadError();
+      } else if (/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(url)) {
+        sf._loadImg(url);
+      } else {      
+        sf._loadBuffer(url);
+      }
     });
     sf.timer = setInterval(function() {
       sf.countNum();
     }, 30);
   };
+  p.prototype._loadError = function(url) {
+    var sf = this;
+    !sf.bFinish && (sf.despercent = Math.floor((++sf.nCurIndex / nTotal) * 100));
+  }
+  p.prototype._loadImg = function(url) {
+    var sf = this;
+    var nTotal = sf.items.length;
+    var img = new Image;
+    img.onload = img.onerror = img.onabort = function() {
+      !sf.bFinish && (sf.despercent = Math.floor((++sf.nCurIndex / nTotal) * 100));
+    };
+    img.src = sf.prefix + url;
+  }
+  p.prototype._loadBuffer = function(url) {
+    var sf = this;
+    url = sf.prefix + url;
+    var nTotal = sf.items.length;
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arrayBuffer';
+    request.onload = request.onerror = request.onabort = function() {
+      !sf.bFinish && (sf.despercent = Math.floor((++sf.nCurIndex / nTotal) * 100));
+    };
+    request.send();
+  }
   p.prototype.countNum = function() {
     var sf = this;
     if (sf.bFinish) {
